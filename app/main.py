@@ -4,10 +4,12 @@ from app.mappers import COMMANDS_MAPPER
 
 def main(book: Book, commands: list[tuple[str, str]]) -> None | str:
     for cmd, method_type in commands:
-        command_mapper = COMMANDS_MAPPER[cmd]
-        if method_type not in command_mapper:
-            raise ValueError(f"Unknown display type: {method_type}")
-        output = command_mapper[method_type]()
+        if cmd not in COMMANDS_MAPPER:
+            raise ValueError(f"Unknown command: {cmd}")
+        method_mapper = COMMANDS_MAPPER[cmd]
+        if method_type not in method_mapper:
+            raise ValueError(f"Unknown {cmd} method: {method_type}")
+        output = method_mapper[method_type]()
         result = getattr(output, cmd)(book)
         if cmd == "serialize":
             return result
